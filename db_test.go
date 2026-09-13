@@ -41,7 +41,7 @@ func TestGimnasio_CRUD(t *testing.T) {
 	err = queries.UpdateUsuario(ctx, db.UpdateUsuarioParams{
 		ID:        nuevoSocio.ID,
 		Nombre:    "Nicolás",
-		Apellido:  "tupapi",
+		Apellido:  "nico2",
 		Email:     nuevoSocio.Email,
 		Telefono:  nuevoSocio.Telefono,
 		PagoAlDia: sql.NullBool{Bool: false, Valid: true},
