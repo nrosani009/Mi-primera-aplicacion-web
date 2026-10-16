@@ -5,7 +5,7 @@ fuser -k 8080/tcp 2>/dev/null || true
 docker rm -f gym-postgres 2>/dev/null || true
 
 echo "2. Generando código con sqlc..."
-~/go/bin/sqlc generate
+go run github.com/sqlc-dev/sqlc/cmd/sqlc@latest generate
 
 echo "3. Levantando PostgreSQL en Docker..."
 docker run --name gym-postgres -e POSTGRES_PASSWORD=secreta -e POSTGRES_DB=gimnasio_app -p 5432:5432 -d postgres
