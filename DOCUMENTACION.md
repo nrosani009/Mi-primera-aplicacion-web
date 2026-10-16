@@ -1,41 +1,25 @@
-# Documentación - TP2 PERSISTENCIA
+# Documentación 
 
 ## 1. Objetivo
-EL objetivo de este trabajo es implementar la capa de persistencia de una aplicación web para la gestión de socios de un gimnasio.
+El proyecto consiste en una aplicación para la gestión de socios de un gimnasio. A lo largo de los trabajos prácticos se desarrolló un servidor web, se incorporó una capa de persistencia y se realizaron las operaciones de gestión mediante una API REST.
 
-La persistencia permite almacenar los datos de los socios en una base de datos PostgreSQL y realizar sobre ellos las operaciones básicas de creación, consulta, modificación y eliminación.
-
-Para acceder a la base de datos desde Go se utiliza sqlc, que permite definir las consultas utilizando SQL y generar automáticamente el código Go necesario para ejecutarlas.
+La aplicación permite almacenar y administrar los datos de los socios utilizando Go, PostgreSQL, Docker y sqlc.
 
 ## 2. Estructura del proyecto
-La persistencia se organiza de la siguiente manera
+La definición del esquema se encuentra en db/schema/schema.sql.
 
-1. db/
-1.1 queries/
-1.1.1 users.sql
-1.2 schema/
-1.2.1 schema.sql
-1.3 sqlc/
-1.3. ..
-2. sqlc.taml
-3. db_test.go
-4. test.sh
+La tabla usuarios contiene los siguientes campos:
+- id: identificador único del socio y clave primaria.
+- nombre: nombre del socio, obligatorio.
+- apellido: apellido del socio, obligatorio.
+- email: correo electrónico, obligatorio y único.
+- telefono: número de teléfono.
+- pago_al_dia: indica si el socio tiene los pagos al día.
+- creado_en: fecha y hora de creación del registro.
+El esquema utiliza PostgreSQL para almacenar los datos de manera persistente.
 
-db/schema/schema.sql contiene la definición de la base de datos.
-
-Se define la tabla "usuarios", que contiene:
-- id: identificador único del socio.
-- nombre: nombre del socio.
-- apellido: apellido del socio.
-- email: correo electrónico del socio.
-- telefono: número de telefono.
-- pago_al_dia: indica si el socio tiene sus pagos al dia.
-- creado_en: fecha y hora en la que se creó el registro.
-
-El campo id es la clave primaria de la tabla.
-
-## 3. Consultas SQL
-Las operaciones sobre la tabla "usuarios" se encuentran definidas en db/queries/users.sql.
+## 3. Consultas SQL y generación con sqlc
+Las consultas se encuentran en db/queries/users.sql.
 
 Se implementaron las siguientes operaciones:
 1. Crear un usuario
@@ -51,21 +35,7 @@ DeleteUsuario: elimina un socio a partir de su id.
 
 Estas operaciones conforman el CRUD de la entidad usuarios.
 
-## 4. Uso de sqlc
-El poryecto utiliza sqlc para generar automàticamente código Go a partir de las consultas SQL.
-
-La configuración se encuentra en sqlc.yaml
-
-En este archivo se indica:
-- que el motor de bd utilizado es PostgreSQL.
-- que las consultas se encuentran en db/queries.
-- que el esquema se encuentra en db/schema.
-- que el código generado debe utilizar el paquete db.
-- que el código generado se almacena en db/sqlc.
-
-EL código generado permite utilizar las consultas desde Go mediante estructuras y funciones tipadas, asi evitamos tener que escribir manualmente gran parte del código necesario para interactuar con la bd.
-
-## 5. Pruebas de persistencia
+## 4. Pruebas de persistencia
 
 Las pruebas se encuentran en db_test.go.
 
@@ -84,27 +54,30 @@ postgres://postgres:secreta@localhost:5432/gimnasio_app
 
 La base de datos utilizada para las pruebas se llama gimnasio_app.
 
-## 6. Automatización de las pruebas
-El archivo test.sh permite ejecutar todo el proceso de prueba de forma automatizada.
+## 5. Conexion con la base de datos
+En main.go se establece la conexión con PostgreSQL utilizando el controlador lib/pq.
 
-El script realiza las siguientes acciones:
-1. Limpieza.
-ELimina un contenedor anterior, en caso de que exista.
-2. Generación de código.
-Ejecuta: 
-    sqlc generate
-Esto genera el código Go correspondiente a las consultas SQL.
-3. Creación de PostgreSQL.
-Se crea un contenedor DOcker utilizando la imagen de PostgreSQL. EL contenedor utiliza:
-- BD: gimnasio_app
-- Usuario: postgres
-- Contraseña: secreta
-- Puerto: 5432
-4. Creación del esquema.
-Se ejecuta el archivo db/schema/schema.sql dentro del contenedor para crear la tabla usuarios.
-5. Ejecución de las pruebas.
-Se ejecuta: 
-    go test -v ./ ...
-Esto ejecuta las pruebas del proyecto.
-6. Limpieza final.
-Una vez finalizadas las pruebas, se elimina el contenedor utilizado. De esta manera, no es necesario configurar manualmente una instancia de PostgreSQL para probar la aplicación.
+La aplicación crea una instancia de db.Queries mediante db.New(dbConn). Esta instancia se utiliza en los handlers para ejecutar las operaciones generadas por sqlc.
+
+La conexión configurada utiliza los siguientes parámetros:
+- Base de datos: gimnasio_app.
+- Usuario: postgres.
+- Puerto: 5432.
+- Contraseña configurada para el entorno de pruebas: secreta.
+
+Estos parámetros deben coincidir con los utilizados para levantar el contenedor de PostgreSQL.
+
+## 6. Implementación de la API REST
+En esta etapa del proyecto se expone la funcionalidad de persistencia mediante una API REST desarrollada en Go.
+
+La API permite gestionar los socios del gimnasio a través de peticiones HTTP. Los handlers reciben las solicitudes, validan los datos, utilizan las consultas generadas por sqlc y devuelven las respuestas correspondientes.
+
+- Conexión con la base de datos
+La aplicación establece una conexión con PostgreSQL y crea una instancia del paquete generado por sqlc. Esta instancia permite ejecutar las operaciones de acceso a datos desde los handlers.
+
+- Endpoints implementados:
+· POST /usuarios: recibe los datos de un socio en formato JSON, valida la información, guarda el registro y devuelve el socio creado.
+· GET /usuarios: obtiene y devuelve la lista de socios en formato JSON.
+· GET /usuarios/{id}: busca un socio por su identificador. Si no existe, devuelve un error 404.
+· PUT /usuarios/{id}: recibe los nuevos datos, valida la información y actualiza el socio correspondiente.
+· DELETE /usuarios/{id}: elimina el socio indicado por su identificador.
