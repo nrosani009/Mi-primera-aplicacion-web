@@ -1,37 +1,43 @@
-# Mi-primera-aplicacion-web
 # Trabajo de Cursada: Mi Primera Aplicación Web
+## TP3 - API
 
-Este repositorio contiene la entrega del TP1. Es un servidor web desarrollado en Go.
+Este proyecto implementa una API REST para la gestiòn de socios de un gimnasio. Permite crear, consultar, listar, actualizar y eliminar socios mediante peticiones HTTP.
+
+La aplicación está desarrollada en Go y utiliza PostreSQL como base de datos y sqlc para generar el código de acceso a datos:
+
+## Requisitos
+Para ejecutar el proyecto se necesita tener instalado:
+- Go.
+- Docker.
+- sqlc.
+- curl.
 
 ## Instrucciones de ejecución
 1. Clonar este repositorio en tu máquina local.
 2. Abrir una terminal y moverte hasta la carpeta del proyecto.
-3. Ejecutar el siguiente comando para levantar el servidor:
-   go run main.go
-4. Abrir un navegador web y acceder a `http://localhost:8080`.
+3. Ejecutar el siguiente comando:
+   bash test.sh
 
-## Aclaracion: 
-El servidor es estatico, por lo tanto utilizamos el index.html como archivo estatico dentro de la carpeta static.
+El script automatiza las tareas necesarias para preparar el entorno, generar el còdigo de acceso a datos, iniciar PostreSQL, ejecutar la aplicación y probar los endpoints de la API. Al finalizar, realiza las tareas de limpieza correspondientes.
 
-# App Gimnasio - TP2 (Persistencia)
+## Endpoints disponibles
+La API permite realizar las siguientes operaciones sobre los socios:
 
-## Descripción
-Este proyecto implementa la capa de acceso a datos para un sistema de gestión de un gimnasio. Permite administrar el registro de socios (usuarios), verificando sus datos de contacto y el estado de sus pagos.
+| Método HTTP | Ruta | Operación |
+|---|---|---|
+| POST | `/usuarios` | Crear un socio |
+| GET | `/usuarios` | Listar los socios |
+| GET | `/usuarios/{id}` | Obtener un socio por ID |
+| PUT | `/usuarios/{id}` | Actualizar un socio |
+| DELETE | `/usuarios/{id}` | Eliminar un socio |
 
-## Ejecución y Pruebas
-Para probar el proyecto de forma automatizada, simplemente clone este repositorio y ejecute el script de pruebas en la terminal:
+## Pruebas de la API
+El archivo requests.sh contiene ejemplos de peticiones HTTP realizadas mediante curl para comprobar el funcionamiento de los endpoints.
 
-**¿Qué hace este script?**
-1. Limpia contenedores previos.
-2. Ejecuta `sqlc` para generar el código Go.
-3. Levanta un contenedor de PostgreSQL.
-4. Crea las tablas a partir de `schema.sql`.
-5. Ejecuta los tests unitarios (`go test`).
-6. Destruye el contenedor para limpiar el entorno.
+# Documentación adicional
+La explicación detallada del diseño de la base de datos, el uso de sqlc, la implementación de la API REST, los handlers y las pruebas se encuentra en DOCUMENTACION.MD.
 
-## Documentación del Proyecto (Persistencia)
-Para aislar la lógica de base de datos del resto de la aplicación, se optó por utilizar **sqlc**.
-- **Esquema:** La base de datos se modela en el archivo `db/schema/schema.sql`, donde se define la entidad principal `usuarios`.
-- **Consultas:** Las operaciones CRUD se definieron utilizando SQL puro en `db/queries/queries.sql`.
-- **Generación Automática:** Mediante `sqlc`, se generó código Go estáticamente tipado a partir de nuestras consultas, garantizando seguridad en tiempo de compilación y evitando escribir código repetitivo para el mapeo de variables.
+
+
+
 
