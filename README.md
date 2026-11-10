@@ -1,46 +1,24 @@
 # Trabajo de Cursada: Mi Primera Aplicación Web
-## TP3 - API
+## TP5 - Renderizado del Lado del Servidor (Templ)
 
-Este proyecto continua la aplicacion web desarrollada en los prácticos anteriores. Consiste en una API REST para gestiònar socios de un gimnasio, permitiendo crear, listar, consultar, actualizar y eliminar registros. 
+Este proyecto continúa la aplicación web desarrollada en los prácticos anteriores. En esta etapa (TP5) se migró la arquitectura anterior a **Server-Side Rendering (SSR)** utilizando [templ](https://templ.guide/) para generar las vistas dinámicamente en Go y **Pico.css** para el diseño visual de la interfaz.
 
-La aplicación está desarrollada en Go, utiliza PostgreSQL para almacenar los datos y sqlc para generar el código de acceso a la base de datos. También conserva el servidor de archivos estáticos desarrollado en el TP1:
+La aplicación está desarrollada en Go, utiliza PostgreSQL para almacenar los datos y `sqlc` para generar el código de acceso a la base de datos.
+
+---
 
 ## Requisitos
 Para ejecutar el proyecto se necesita tener instalado:
-- Go.
-- Docker.
-- sqlc.
-- curl.
+- Docker (con el servicio activo).
+- Go (versión 1.22 o superior).
+- Bash.
+
+---
 
 ## Instrucciones de ejecución
 1. Clonar este repositorio en tu máquina local.
 2. Abrir una terminal y moverte hasta la carpeta del proyecto.
-3. Ejecutar el siguiente comando:
-   ./test.sh
-
-El script automatiza las tareas necesarias para preparar el entorno, generar el còdigo de acceso a datos, iniciar PostreSQL, ejecutar la aplicación y probar los endpoints de la API. Al finalizar, realiza las tareas de limpieza correspondientes.
-
-## Aclaracion
-Realizamos el gitignore del sqlc, en el caso de que no se tenga instalado en su computadora o carpeta se va a instalar de forma automatica (Implementado en el script).
-
-## Endpoints disponibles
-La API permite realizar las siguientes operaciones sobre los socios:
-
-| Método HTTP | Ruta | Operación |
-|---|---|---|
-| POST | `/usuarios` | Crear un socio |
-| GET | `/usuarios` | Listar los socios |
-| GET | `/usuarios/{id}` | Obtener un socio por ID |
-| PUT | `/usuarios/{id}` | Actualizar un socio |
-| DELETE | `/usuarios/{id}` | Eliminar un socio |
-
-## Pruebas de la API
-El archivo requests.sh contiene ejemplos de peticiones HTTP realizadas mediante curl para comprobar el funcionamiento de los endpoints.
-
-# Documentación adicional
-La explicación detallada del diseño de la base de datos, el uso de sqlc, la implementación de la API REST, los handlers y las pruebas se encuentra en DOCUMENTACION.MD.
-
-
-
-
-
+3. Ejecutar el script principal:
+   ```bash
+   chmod +x run-app.sh
+   ./run-app.sh

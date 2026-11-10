@@ -1,0 +1,57 @@
+package views
+
+import (
+	db "entrega1/db/sqlc"
+	"strconv"
+)
+
+// Lista de Socios
+templ EntityList(usuarios []db.Usuario) {
+	<article>
+		<header><strong>Socios Registrados</strong></header>
+		if len(usuarios) == 0 {
+			<p>No hay socios registrados.</p>
+		} else {
+			<div class="grid">
+				for _, u := range usuarios {
+					<div class="card" style="padding: 1rem; border: 1px solid #ccc; border-radius: 5px; margin-bottom: 1rem;">
+						<strong>{ u.Nombre } { u.Apellido }</strong>
+						<p style="margin: 0;"><small>{ u.Email }</small></p>
+						
+						if u.Telefono.Valid && u.Telefono.String != "" {
+							<p style="margin: 0;"><small>Tel: { u.Telefono.String }</small></p>
+						} else {
+							<p style="margin: 0;"><small>Tel: N/A</small></p>
+						}
+
+						if u.PagoAlDia.Valid && u.PagoAlDia.Bool {
+							<p style="margin: 0; color: green;"><small>Estado: Al día</small></p>
+						} else {
+							<p style="margin: 0; color: red;"><small>Estado: Con deuda</small></p>
+						}
+						
+						<!-- Formulario para borrar -->
+						<form action="/usuarios/delete" method="POST" style="margin-top: 10px;">
+							<input type="hidden" name="id" value={ strconv.Itoa(int(u.ID)) } />
+							<button type="submit" class="secondary outline" style="padding: 0.2rem 0.5rem; width: auto;">Eliminar</button>
+						</form>
+					</div>
+				}
+			</div>
+		}
+	</article>
+}
+
+// Componente Principal que une las vistas
+templ IndexPage(usuarios []db.Usuario) {
+	@Layout() {
+		<div class="grid">
+			<div>
+				@EntityForm()
+			</div>
+			<div>
+				@EntityList(usuarios)
+			</div>
+		</div>
+	}
+}

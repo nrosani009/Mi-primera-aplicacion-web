@@ -1,0 +1,21 @@
+package views
+
+// Formulario de Alta
+templ EntityForm() {
+	<article>
+		<header><strong>Nuevo Socio</strong></header>
+		<form action="/usuarios" method="POST">
+			<fieldset>
+				<label>Nombre: <input type="text" name="nombre" required/></label>
+				<label>Apellido: <input type="text" name="apellido" required/></label>
+				<label>Email: <input type="email" name="email" required/></label>
+				<label>Teléfono: <input type="text" name="telefono"/></label>
+				<label>
+					<input type="checkbox" name="pago_al_dia"/>
+					Cuota al día
+				</label>
+			</fieldset>
+			<button type="submit">Guardar Socio</button>
+		</form>
+	</article>
+}

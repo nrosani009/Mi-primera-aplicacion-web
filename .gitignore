@@ -1,1 +1,6 @@
+# Código generado automáticamente por sqlc y templ
 db/sqlc/
+*_templ.go
+
+# Binario ejecutable
+app_ejecutable
