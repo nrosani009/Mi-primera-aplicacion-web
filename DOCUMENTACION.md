@@ -29,7 +29,8 @@ flowchart TD
     B -->|"Consultas tipadas"| D["Acceso a Datos (sqlc)<br/>• queries.ListUsuarios<br/>• queries.CreateUsuario<br/>• queries.DeleteUsuario"]
     
     D --> E[("PostgreSQL (en Docker)")]
-    
+```
+
 ### Capas del Sistema:
 
 1. **Capa de Persistencia (PostgreSQL + `sqlc`):**
