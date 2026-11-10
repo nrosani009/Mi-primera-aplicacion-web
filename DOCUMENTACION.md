@@ -20,30 +20,15 @@ El objetivo principal de esta refactorización fue:
 
 La arquitectura está construida como un monolito modular en Go dividida en tres capas principales:
 
-┌─────────────────────────────────────────────────────────┐
-│                    Navegador Web                        │
-└────────────────────────────┬────────────────────────────┘
-                             │ Peticiones HTTP (GET / POST)
-                             ▼
-┌─────────────────────────────────────────────────────────┐
-│              Servidor Web Go (main.go)                  │
-│  - Routers HTTP (http.ServeMux)                         │
-│  - Handlers de renderizado y lógica de formularios      │
-└──────────────┬────────────────────────────┬─────────────┘
-               │                            │
-               │ Invoca componentes         │ Consultas tipadas
-               ▼                            ▼
-┌──────────────────────────┐    ┌─────────────────────────┐
-│   Vistas HTML (views/)   │    │  Acceso a Datos (sqlc)  │
-│  - layout.templ          │    │  - queries.ListUsuarios │
-│  - entity_form.templ     │    │  - queries.CreateUsuario│
-│  - entity_list.templ     │    │  - queries.DeleteUsuario│
-└──────────────────────────┘    └────────────┬────────────┘
-                                             │
-                                             ▼
-                                ┌─────────────────────────┐
-                                │ PostgreSQL (en Docker)  │
-                                └─────────────────────────┘
+```mermaid
+flowchart TD
+    A["Navegador Web"] -->|"Peticiones HTTP (GET / POST)"| B["Servidor Web Go (main.go)<br/>• Routers HTTP (http.ServeMux)<br/>• Handlers de renderizado y lógica de formularios"]
+    
+    B -->|"Invoca componentes"| C["Vistas HTML (views/)<br/>• layout.templ<br/>• entity_form.templ<br/>• entity_list.templ"]
+    
+    B -->|"Consultas tipadas"| D["Acceso a Datos (sqlc)<br/>• queries.ListUsuarios<br/>• queries.CreateUsuario<br/>• queries.DeleteUsuario"]
+    
+    D --> E[("PostgreSQL (en Docker)")]
 
 ### Capas del Sistema:
 
