@@ -19,31 +19,31 @@ El objetivo principal de esta refactorización fue:
 ## 2. Arquitectura del Sistema
 
 La arquitectura está construida como un monolito modular en Go dividida en tres capas principales:
+
 ┌─────────────────────────────────────────────────────────┐
 │                    Navegador Web                        │
 └────────────────────────────┬────────────────────────────┘
-│ Peticiones HTTP (GET / POST)
-▼
+                             │ Peticiones HTTP (GET / POST)
+                             ▼
 ┌─────────────────────────────────────────────────────────┐
 │              Servidor Web Go (main.go)                  │
 │  - Routers HTTP (http.ServeMux)                         │
 │  - Handlers de renderizado y lógica de formularios      │
 └──────────────┬────────────────────────────┬─────────────┘
-│                            │
-│ Invoca componentes         │ Consultas tipadas
-▼                            ▼
+               │                            │
+               │ Invoca componentes         │ Consultas tipadas
+               ▼                            ▼
 ┌──────────────────────────┐    ┌─────────────────────────┐
 │   Vistas HTML (views/)   │    │  Acceso a Datos (sqlc)  │
 │  - layout.templ          │    │  - queries.ListUsuarios │
 │  - entity_form.templ     │    │  - queries.CreateUsuario│
 │  - entity_list.templ     │    │  - queries.DeleteUsuario│
 └──────────────────────────┘    └────────────┬────────────┘
-│
-▼
-┌─────────────────────────┐
-│ PostgreSQL (en Docker)  │
-└─────────────────────────┘
-
+                                             │
+                                             ▼
+                                ┌─────────────────────────┐
+                                │ PostgreSQL (en Docker)  │
+                                └─────────────────────────┘
 
 ### Capas del Sistema:
 
